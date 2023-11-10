@@ -56,10 +56,13 @@
 	function switchSelection(feature: string | null) {
 		if (!feature) {
 			let input = document.querySelector('#country-input');
+			console.log(input)
 			feature = input.value;
-			input.value = '';
+			//console.log(input.value)
+			//input.value = '';
 		}
 		
+		console.log(feature);
 		let d = d3.select(`[data-geounit="${feature}"]`);
 		let data = JSON.parse(d.attr('data'));
 		
@@ -112,7 +115,7 @@
 					placeholder="Add country by name"
 					on:keydown={onkeydown}
 				/>
-				<button id="add-country" on:click={switchSelection}>Add</button>
+				<button id="add-country" on:click={() => switchSelection()}>Add</button>
 			</div>
 		</div>
 		<div class="card">
