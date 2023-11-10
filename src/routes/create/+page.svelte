@@ -58,8 +58,7 @@
 			let input = document.querySelector('#country-input');
 			console.log(input)
 			feature = input.value;
-			//console.log(input.value)
-			//input.value = '';
+			input.value = '';
 		}
 		
 		console.log(feature);
