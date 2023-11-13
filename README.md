@@ -12,3 +12,5 @@
 - [ ] Add Leaflet version for zooming
 - [ ] Add projection options
 - [x] Add export as image option
+
+# IN DESPERATE NEED OF A COHERENT UI

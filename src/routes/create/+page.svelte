@@ -13,18 +13,17 @@
 		let d = feature.datum();
 
 		switchSelection(d.properties.geounit);
-
 	}
 
 	function drawMap() {
 		let container = d3.select('#map-container');
 		let [width, height] = [container.node().clientWidth, container.node().clientHeight];
-		
+
 		let projection = d3
 			.geoMercator()
 			.scale(200)
 			.translate([width / 2, height / 2]);
-		
+
 		let path = d3.geoPath().projection(projection);
 
 		let svg = container
@@ -56,26 +55,35 @@
 	function switchSelection(feature: string | null) {
 		if (!feature) {
 			let input = document.querySelector('#country-input');
-			console.log(input)
+			console.log(input);
 			feature = input.value;
 			input.value = '';
 		}
-		
-		console.log(feature);
-		let d = d3.select(`[data-geounit="${feature}"]`);
-		let data = JSON.parse(d.attr('data'));
-		
+
+		//let d = d3.select(`[data-geounit="${feature}"]`);
+		//let data = JSON.parse(d.attr('data'));
+		//console.log(data);
+
+		let d = d3
+			.selectAll('g.map path')
+			.filter((d) =>
+				d.properties.names.some((n) => n?.toLowerCase() === feature?.toLowerCase())
+			)
+			.node();
+
 		if (!d) return;
 
-		let selected = d.attr('selected')
+		d = d3.select(d);
+		let data = JSON.parse(d.attr('data'));
+		let selected = d.attr('selected');
 		d.style('fill', selected ? color.base : color.selected);
 		d.attr('selected', selected ? null : true);
-		country.population 	+= selected ? -data.pop_est		 : data.pop_est;
-		country.countries 	+= selected ? -1 							 : 1;
-		country.gdp 				+= selected ? -data.gdp_md		 : data.gdp_md;
-		country.total_area 	+= selected ? -data.total_area : data.total_area;
-		country.land_area 	+= selected ? -data.land_area  : data.land_area;
-		country.water_area 	+= selected ? -data.water_area : data.water_area;
+		country.population += selected ? -data.pop_est : data.pop_est;
+		country.countries += selected ? -1 : 1;
+		country.gdp += selected ? -data.gdp_md : data.gdp_md;
+		country.total_area += selected ? -data.total_area : data.total_area;
+		country.land_area += selected ? -data.land_area : data.land_area;
+		country.water_area += selected ? -data.water_area : data.water_area;
 		country = country;
 	}
 
@@ -114,7 +122,7 @@
 					placeholder="Add country by name"
 					on:keydown={onkeydown}
 				/>
-				<button id="add-country" on:click={() => switchSelection()}>Add</button>
+				<button id="add-country" on:click={() => switchSelection(null)}>Add</button>
 			</div>
 		</div>
 		<div class="card">
