@@ -2,5 +2,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind components;
-@tailwind utilities;
+
+@font-face {
+  font-family: 'Recoleta';
+  src: url('/fonts/Recoleta.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --purple: #8E82C9;
+  --light-blue: #70AFDB;
+  --yellow: #F5BF89;
+  --green: #75BDA5;
+  --red: #CC6666;
+  --dark: #1A1A1A;
+  --light: #D9D9D9;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  /*padding: 1rem;*/
+  box-sizing: border-box;
+  /*overflow: hidden;*/
+}
+
+body {
+  background-color: black;
+}
+
+.title, .subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--light);
+}
+
+.title {
+  font-size: 8rem;
+}
+
+.subtitle {
+  font-size: 4rem;
+}
+
+em {
+  font-style: normal;
+  font-weight: 600;
+  background-color: var(--purple); /* fallback */
+  background-image: linear-gradient(90deg, var(--purple), var(--light-blue));
+  background-size: 100%;
+  background-repeat: repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}

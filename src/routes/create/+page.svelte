@@ -35,7 +35,7 @@
 
 		let g = svg.append('g').attr('class', 'map');
 
-		d3.json('/world.geojson').then(function (data) {
+		d3.json('/maps/world.geojson').then(function (data) {
 			g.selectAll('path')
 				.data(data.features)
 				.enter()
@@ -60,6 +60,7 @@
 			input.value = '';
 		}
 
+		console.log(feature);
 		//let d = d3.select(`[data-geounit="${feature}"]`);
 		//let data = JSON.parse(d.attr('data'));
 		//console.log(data);
@@ -104,7 +105,9 @@
 			</p>
 		</div>
 		<div class="card">
-			<h1 contenteditable spellcheck="false" bind:textContent={country.name} />
+			<h1 
+			class="text-4xl font-bold"
+			contenteditable spellcheck="false" bind:textContent={country.name} />
 			<table>
 				{#each Object.entries(country.display) as [key, value]}
 					<tr>

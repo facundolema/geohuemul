@@ -1,7 +1,7 @@
 import json
 
 countries = {}
-with open('../static/maps/world_un_193.geojson') as f:
+with open('../static/world.geojson') as f:
   countries = json.load(f)
 
 
@@ -18,7 +18,7 @@ new = {
 
 for country in countries['features']:
   for country_data in data:
-    if country_data['iso_a3'] == country['properties']['iso3']:
+    if country_data['adm0_a3'] == country['properties']['adm0_a3']:
       new['features'].append({
         "type": "Feature",
         "properties": country_data,
@@ -28,5 +28,5 @@ for country in countries['features']:
     elif country_data['geounit'] == data[-1]['geounit']:
       print(country['properties']['name'])
       
-with open('../static/maps/UN_member_states.geojson', 'w') as f:
+with open('../static/maps/world.geojson', 'w') as f:
   json.dump(new, f, indent=2)
