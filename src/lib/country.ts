@@ -23,4 +23,14 @@ export class Country {
       "% of Earth's land": ((this.land_area / global_land) * 100).toFixed(2) + '%'
     };
   }
+
+  reset() {
+    this.name = 'Union #1';
+    this.population = 0;
+    this.total_area = 0;
+    this.land_area = 0;
+    this.water_area = 0;
+    this.gdp = 0;
+    this.countries = 0;
+  }
 }

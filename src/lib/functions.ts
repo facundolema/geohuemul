@@ -20,7 +20,7 @@ export function downloadMap() {
 	const canvas = document.createElement('canvas');
 	const ctx = canvas.getContext('2d');
 
-	Canvg.fromString(ctx, document.querySelector('svg').outerHTML).render();
+	Canvg.fromString(ctx, document.querySelector('svg.map').outerHTML).render();
 
 	ctx.globalCompositeOperation = 'destination-over';
 	ctx.fillStyle = '#caf0f8';

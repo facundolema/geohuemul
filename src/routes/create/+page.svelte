@@ -5,15 +5,31 @@
 	import { downloadImage, downloadMap } from '$lib/functions';
 	import { color } from '$lib/constants';
 	import { Country } from '$lib/country';
+	import FaDownload from 'svelte-icons/fa/FaDownload.svelte';
+	import FaFileDownload from 'svelte-icons/fa/FaFileDownload.svelte';
+	import FaRegTimesCircle from 'svelte-icons/fa/FaRegTimesCircle.svelte';
+	import IoMdColorFilter from 'svelte-icons/io/IoMdColorFilter.svelte';
+	import DataTable from '$components/DataTable.svelte';
+	import Input from '$components/Input.svelte';
+
+	function exists(selected: d3.BaseType | null) {
+		let input = document.querySelector('#country-input');
+		if (selected) {
+			input?.classList.remove('error');
+			input.value = '';
+			return true;
+		} else {
+			input?.classList.remove('error');
+			input.offsetWidth;
+			input?.classList.add('error');
+			return false;
+		}
+	}
 
 	let country = new Country();
+	let selection = '';
 
-	function onClick() {
-		let feature = d3.select(this);
-		let d = feature.datum();
-
-		switchSelection(d.properties.geounit);
-	}
+	let color_s = color.red;
 
 	function drawMap() {
 		let container = d3.select('#map-container');
@@ -28,10 +44,11 @@
 
 		let svg = container
 			.append('svg')
+			.classed('map', true)
 			.attr('width', width)
 			.attr('height', height)
 			.style('border', '1px solid #222')
-			.style('background-color', '#caf0f8');
+			.style('background-color', color.ocean);
 
 		let g = svg.append('g').attr('class', 'map');
 
@@ -43,41 +60,33 @@
 				.attr('d', path)
 				.attr('data', (d) => JSON.stringify(d.properties))
 				.attr('data-geounit', (d) => d.properties.geounit)
-				.style('fill', color.base)
+				.style('fill', color.beige)
 				.style('stroke', '#222')
 				.style('stroke-width', 0.5)
-				.on('click', onClick);
+				.on('click', (e) => switchSelection(e.target.getAttribute('data-geounit')));
 		});
 	}
 
 	onMount(drawMap);
 
-	function switchSelection(feature: string | null) {
-		if (!feature) {
-			let input = document.querySelector('#country-input');
-			console.log(input);
-			feature = input.value;
-			input.value = '';
-		}
-
-		console.log(feature);
-		//let d = d3.select(`[data-geounit="${feature}"]`);
-		//let data = JSON.parse(d.attr('data'));
-		//console.log(data);
-
-		let d = d3
+	function switchSelection(feature: string) {
+		let s: d3.Selection = d3
 			.selectAll('g.map path')
-			.filter((d) =>
-				d.properties.names.some((n) => n?.toLowerCase() === feature?.toLowerCase())
+			.filter((country) =>
+				country.properties.names.some(
+					(name: string) => name?.toLowerCase() === feature?.toLowerCase()
+				)
 			)
 			.node();
 
-		if (!d) return;
+		if (!exists(s)) return;
 
-		d = d3.select(d);
+		let d: d3.Selection = d3.select(s);
 		let data = JSON.parse(d.attr('data'));
 		let selected = d.attr('selected');
-		d.style('fill', selected ? color.base : color.selected);
+
+		// Update country data
+		d.style('fill', selected ? color.beige : color_s);
 		d.attr('selected', selected ? null : true);
 		country.population += selected ? -data.pop_est : data.pop_est;
 		country.countries += selected ? -1 : 1;
@@ -88,54 +97,125 @@
 		country = country;
 	}
 
-	function onkeydown(e) {
-		if (e.key === 'Enter') {
-			switchSelection(e.target.value);
-			e.target.value = '';
-			return;
-		}
+	function clearSelection() {
+		country.reset();
+		country = country;
+		color_s = color.red;
+		d3.selectAll('g.map path').style('fill', color.beige).attr('selected', null);
 	}
+
+	function onkeyup(e: KeyboardEvent) {
+		selection = e.target?.value;
+		if (e.key === 'Enter') switchSelection(selection);
+	}
+
+	const options = [
+		{ action: 'Clear selection', fun: clearSelection, icon: FaRegTimesCircle },
+		{ action: 'Download map', fun: downloadMap, icon: FaDownload },
+		{ action: 'Download image', fun: downloadImage, icon: FaFileDownload }
+	];
 </script>
 
 <div id="map-container">
 	<div id="overlay">
+		<!-- title Card -->
 		<div class="card">
-			<p style="margin:0;padding:0;font-size:1.25rem;font-weight:600;text-align:center;">
-				GeoHuemul
-			</p>
+			<h2>GeoHuemul</h2>
 		</div>
+
+		<!-- Information Card -->
 		<div class="card">
-			<h1 
-			class="text-4xl font-bold"
-			contenteditable spellcheck="false" bind:textContent={country.name} />
-			<table>
-				{#each Object.entries(country.display) as [key, value]}
-					<tr>
-						<td>{key}</td>
-						<td>{value}</td>
-					</tr>
-				{/each}
-			</table>
+			<h1
+				class="text-4xl font-bold"
+				contenteditable
+				spellcheck="false"
+				bind:textContent={country.name}
+			/>
+			<DataTable data={country.display} />
 		</div>
+
+		<!-- Input Card -->
 		<div class="card">
-			<div style="display:flex;gap: 4px;">
+			<Input {onkeyup} />
+		</div>
+
+		<!-- Options Card -->
+		<div class="card flex justify-end gap-2">
+			<span id="color-picker-container">
+				<span id="picker-icon"><IoMdColorFilter /></span>
 				<input
-					id="country-input"
-					type="Search"
-					placeholder="Add country by name"
-					on:keydown={onkeydown}
+					type="color"
+					id="color-picker"
+					value={color_s}
+					on:change={(e) => (color_s = e.target.value)}
 				/>
-				<button id="add-country" on:click={() => switchSelection(null)}>Add</button>
-			</div>
-		</div>
-		<div class="card">
-			<button class="download-svg" on:click={downloadMap}>Download map</button>
-			<button class="download-svg" on:click={downloadImage}>Download</button>
+			</span>
+			<span class="flex-grow" />
+			{#each options as { action, fun, icon: Icon }}
+				<button class="download-btn" on:click={fun} title={action}>
+					<div class="icon">
+						<Icon />
+					</div>
+				</button>
+			{/each}
 		</div>
 	</div>
 </div>
 
 <style>
+	#color-picker {
+		height: 100%;
+		width: 100%;
+	}
+	
+	input[type="color"] {
+		-webkit-appearance: none;
+	}
+	input[type="color"]::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+	input[type="color"]::-webkit-color-swatch {
+		border: none;
+	}
+
+	#color-picker-container {
+		height: 2rem;
+		width: 3rem;
+		display: flex;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		border: 1px solid #222;
+		border-style: inset;
+		box-sizing: content-box;
+		position: relative;
+	}
+
+	.download-btn {
+		height: 2rem;
+		width: 2rem;
+		border-radius: 0.5rem;
+		border: 1px solid #222;
+	}
+
+	.icon {
+		width: 1rem;
+		height: 1rem;
+		color: var(--dark);
+	}
+
+	#picker-icon {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		width: 1.5rem;
+		height: 1.5rem;
+		color: var(--dark);
+		pointer-events: none;
+	}
+
 	#map-container {
 		height: 100%;
 		position: relative;
@@ -169,27 +249,5 @@
 
 	.card > h1 {
 		margin: 1rem 0;
-	}
-
-	#country-input {
-		border-radius: 8px;
-		border: 1px solid #222;
-		width: 100%;
-		padding: 0.5rem;
-		background-color: rgba(255, 255, 255, 0.35);
-	}
-
-	table {
-		width: 100%;
-	}
-
-	table,
-	td {
-		border: 1px solid #222;
-		border-collapse: collapse;
-	}
-
-	td {
-		padding: 0.25rem 0.5rem;
 	}
 </style>

@@ -52,7 +52,7 @@
 				.enter()
 				.append('path')
 				.attr('d', path)
-				.style('fill', color.base)
+				.style('fill', color.beige)
 				.style('stroke', '#222')
 				.style('stroke-width', 0.5);
 		});
@@ -73,7 +73,7 @@
 		let path = d3.select(selected);
 
 		if (path.attr('selected')) return;
-		path.style('fill', color.selected);
+		path.style('fill', color.red);
 		path.attr('selected', true);
 
 		if (guessed.length === 0) {

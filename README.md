@@ -1,9 +1,9 @@
 # To do
 
 ## `Create` section
-- [ ] Add a "clear" button
+- [x] Add a "clear" button
 - [ ] Add option to create new selection simultaneously
-- [ ] Add color customization options
+- [x] Add color customization options*
 - [ ] Choose a better color palette
 - [ ] Update the data
 - [ ] Allow users to download the data of the fictional union
@@ -12,7 +12,7 @@
 - [ ] Add Leaflet version for zooming
 - [ ] Add projection options
 - [x] Add export as image option
-- [ ] Make the input field a component and bring the animation from `/play`
+- [x] Make the input field a component and bring the animation from `/play`
 
 ## `Maps` section
 - [ ] Add a blog-style layout for each continent section
@@ -26,3 +26,9 @@
 
 # UI
 - [x] Improved
+
+```
+note: choosing a different color won't immediately create a new selection.
+this is by design, so people can choose different colors to represent different
+regions in their selections.
+```
