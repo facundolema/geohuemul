@@ -10,7 +10,9 @@ const config = {
 				"yellow": "#F5BF89",
 				"green": "#75BDA5",
 				"red": "#CC6666",
-				"dark": "#1A1A1A"
+				"dark": "#1A1A1A",
+				"beige": "#D9C3AD",
+				"ocean": "#caf0f8",
 			}
 		}
 	},

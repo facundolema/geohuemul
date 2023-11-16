@@ -2,9 +2,12 @@
 	export let src: string;
 	export let label: string;
   export let href: string;
+	export let width: string = '24rem';
+	export let height: string = '18rem';
+	export let aspect_ratio: string = '4/3';
 </script>
 
-<div id="container">
+<div id="container" style="width: {width}; aspect-ratio: {aspect_ratio}">
 	<div id="background" />
 	<p id="label">{label}</p>
 	<a id="link" href={href}>
@@ -14,8 +17,6 @@
 
 <style>
 	#container {
-		width: 24rem;
-		aspect-ratio: 4/3;
 		display: flex;
 		justify-content: center;
 		align-items: center;

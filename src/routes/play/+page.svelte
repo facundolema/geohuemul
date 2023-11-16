@@ -1,8 +1,24 @@
 <script>
-	import Sections from "$components/Sections.svelte";
+	import SectionsSimple from "$components/SectionsSimple.svelte";
+	import SectionTitle from "$components/SectionTitle.svelte";
+	import AnimatedWrapper from "$components/AnimatedWrapper.svelte";
 </script>
 
-<main class="flex flex-col items-center justify-center gap-8 w-full h-full">
-	<h2 class="mb-8 subtitle"><em>Play. Learn. Have fun!</em></h2>
-	<Sections slug="play"/>
+<main>
+	<SectionTitle title="Play. Learn. Have fun!" />
+	<AnimatedWrapper>
+		<SectionsSimple slug="play"/>
+	</AnimatedWrapper>
 </main>
+
+<style>
+	main {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 4rem;
+		padding: 4rem;
+	}
+</style>

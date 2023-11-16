@@ -26,6 +26,7 @@
 
 # UI
 - [x] Improved
+- [ ] Responsive (!important)
 
 ```
 note: choosing a different color won't immediately create a new selection.
