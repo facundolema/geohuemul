@@ -1,6 +1,7 @@
 import { Canvg } from 'canvg';
 import html2canvas from 'html2canvas';
 import * as d3 from 'd3';
+// import fs from 'fs';
 
 export const formatNumber = (n: number) => {
   return n.toLocaleString('en-US');
@@ -56,4 +57,13 @@ export function downloadImage() {
 			.style('box-shadow', 'rgba(0, 0, 0, 0.15)')
 			.style('border', '2px solid white');
 	});
+}
+
+export function getPaths(path) {
+	let folders = fs.readdirSync(path);
+	return folders;
+}
+
+export function toTitleCase(s: string) {
+	return s.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ')
 }

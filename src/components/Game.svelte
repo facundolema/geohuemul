@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let mapath;
+	export let filterfun = (feature) => true;
 	import { onMount } from 'svelte';
 	import { color } from '$lib/constants';
 	import InputCard from '$components/InputCard.svelte';
@@ -84,7 +85,7 @@
 
 		const response = await fetch(mapath);
 		geojson = await response.json();
-    geojson.features = geojson.features.filter((feature) => feature.properties.PROVINCIA === 'Buenos Aires');
+    geojson.features = geojson.features.filter(filterfun);
     total = geojson.features.length;
 		L.geoJSON(geojson, {
 			onEachFeature: (feature, layer) => {

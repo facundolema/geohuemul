@@ -1,6 +1,18 @@
-
 <script lang="ts">
 	import InputCard from '$components/InputCard.svelte';
+	// import { getPaths } from '$lib/functions';
+
+	import fs from 'fs';
+	import path from 'path';
+
+	export function get(p) {
+  	const files = fs.readdirSync(p);
+  	const directories = files.filter(file => fs.statSync(path.join(p, file)).isDirectory());
+  	return directories
+	}
+
+	const directories = get('./src/routes/play/north_america/');
+	console.log(directories);
 
 	let guessed: Array<String> = [];
 	let total = 200;
@@ -53,6 +65,7 @@
 	function onkeydown(e) {
 		if (e.key === 'Enter') select(e.target.value);
 	}
+
 </script>
 
 <InputCard
@@ -65,4 +78,5 @@
 
 <div style="color: white;">
   {time}
+	{directories}
 </div>
